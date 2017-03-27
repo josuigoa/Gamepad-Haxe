@@ -5,3 +5,6 @@ bin/*
 Session.vim
 .netrwhist
 *~
+test_projects/heaps/bin/*
+test_projects/luxe/bin/*
+test_projects/openfl/bin/*
