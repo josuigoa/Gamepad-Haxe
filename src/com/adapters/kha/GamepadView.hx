@@ -135,6 +135,6 @@ class GamepadView extends Sprite implements com.adapters.IGamepadView
     function drawVisual(g:kha.graphics2.Graphicx, v:Visual) {
         g.color = v.color;
         if (v.r == null) g.fillRect(v.x, v.y, v.w, v.h);
-        else g.drawCircle(v.x, v.y, v.w, v.h);
+        else g.drawCircle(v.x, v.y, v.r);
     }
 }
