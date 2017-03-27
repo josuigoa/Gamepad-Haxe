@@ -1,0 +1,35 @@
+{
+
+  project : {
+
+      //These first two are required
+    name : 'gamepad',
+    version : '1.0.0',
+    author : 'josuigoa',
+
+      //This configures your app.
+      //The package is important, it's used 
+      //for save locations, initializing mobile project files etc
+    app : {
+      name : 'gamepad',
+      package : 'com.josuigoa.gamepad',
+      codepaths : ['../../src']
+    },
+
+
+      //This configures the build process
+    build : {
+      dependencies : {
+        luxe : '*'
+      }
+    },
+
+      //Copies over all the assets to the output
+    files : {
+      assets : '../../assets/'
+    }
+
+  } //project
+
+}
+

@@ -25,10 +25,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 package com.iainlobb.gamepad;
 
-import flash.display.Stage;
-import flash.events.Event;
-import flash.events.KeyboardEvent;
-import flash.ui.Keyboard;
+import com.adapters.IGamepadView;
 
 /**
  * ...
@@ -136,25 +133,23 @@ class Gamepad
 	 */
 	public var magnitude (default, null):Float;
 	
-	private var stage:Stage;
 	private var inputs:Array<GamepadInput>;
 	private var multiInputs:Array<GamepadMultiInput>;
 	private var targetX:Float;
 	private var targetY:Float;
+
+	public var view:IGamepadView;
 	
 	
 	/**
 	 * Gamepad simplifies keyboard input by simulating an analog joystick.
-	 * @param stage A reference to the stage is needed to listen for system events
 	 * @param isCircle Prevents diagonal movement being faster than horizontal or vertical movement. Use for top-down view games.
 	 * @param ease Simple ease-out speed (range 0 to 1). Pass value of 1 to prevent easing.
-	 * @param autoStep Pass in false if you intend to call step() manually.
 	 */
-	public function new(stage:Stage, isCircle:Bool, ?ease:Float = 0.2, ?autoStep:Bool = true) 
+	public function new(isCircle:Bool, ?ease:Float = 0.2) 
 	{
 		this.isCircle = isCircle;
 		this.ease = ease;
-		this.stage = stage;
 		
 		x = 0;
 		y = 0;
@@ -183,26 +178,12 @@ class Gamepad
 		
 		useArrows();
 		useControlSpace();
-		
-		stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);// , false, 0, true);
-		stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);// , false, 0, true);
-		
-		if (autoStep)
-		{
-			stage.addEventListener(Event.ENTER_FRAME, onEnterFrame);// , false, 0, true);
-		}
 	}
-	
-	
 	
 	/**
 	 * Destructor.
 	 */
-	public function destroy():Void {
-		stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
-		stage.removeEventListener(KeyboardEvent.KEY_UP, onKeyUp);
-		stage.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
-	}
+	public function destroy():Void {}
 	
 	/// DIRECTION PRESETS:
 	
@@ -226,37 +207,25 @@ class Gamepad
 	 * Preset to use the direction arrow keys for movement
 	 * @param replaceExisting pass true to replace exisiting keys, false to add mapping without replacing existing keys. 
 	 */
-	public function useArrows(?replaceExisting:Bool = false):Void
-	{
-		mapDirection(Keyboard.UP, Keyboard.DOWN, Keyboard.LEFT, Keyboard.RIGHT, replaceExisting);
-	}
+	public function useArrows(?replaceExisting:Bool = false):Void {}
 	
 	/**
 	 * Preset to use the W, A, S and D keys for movement. This layout doesn't work for players with French AZERTY keyboards - call useZQSD() instead.
 	 * @param replaceExisting pass true to replace exisiting keys, false to add mapping without replacing existing keys. 
 	 */
-	public function useWASD(?replaceExisting:Bool = false):Void
-	{
-		mapDirection(Keyboard.W, Keyboard.S, Keyboard.A, Keyboard.D, replaceExisting);
-	}
+	public function useWASD(?replaceExisting:Bool = false):Void {}
 	
 	/**
 	 * Preset to use the I, J, K and L keys for movement.
 	 * @param replaceExisting pass true to replace exisiting keys, false to add mapping without replacing existing keys. 
 	 */
-	public function useIJKL(?replaceExisting:Bool = false):Void
-	{
-		mapDirection(Keyboard.I, Keyboard.K, Keyboard.J, Keyboard.L, replaceExisting);
-	}
+	public function useIJKL(?replaceExisting:Bool = false):Void {}
 	
 	/**
 	 * Preset to use the Z, Q, S and D keys for movement. Use this mapping instead of useWASD() when targeting French AZERTY keyboards.
 	 * @param replaceExisting pass true to replace exisiting keys, false to add mapping without replacing existing keys. 
 	 */
-	public function useZQSD(?replaceExisting:Bool = false):Void
-	{
-		mapDirection(Keyboard.Z, Keyboard.S, Keyboard.Q, Keyboard.D, replaceExisting);
-	}
+	public function useZQSD(?replaceExisting:Bool = false):Void {}
 
 	public function useVirtual():Void
 	{
@@ -291,42 +260,30 @@ class Gamepad
 	 * Preset to use the G and H keys for fire buttons.
 	 * @param replaceExisting pass true to replace exisiting keys, false to add mapping without replacing existing keys. 
 	 */
-	public function useGH(?replaceExisting:Bool = false):Void
-	{
-		mapFireButtons(Keyboard.G, Keyboard.H, replaceExisting);
-	}
+	public function useGH(?replaceExisting:Bool = false):Void {}
 	
 	/**
 	 * Preset to use the Z and X keys for fire buttons.
 	 * @param replaceExisting pass true to replace exisiting keys, false to add mapping without replacing existing keys. 
 	 */
-	public function useZX(?replaceExisting:Bool = false):Void
-	{
-		mapFireButtons(Keyboard.Z, Keyboard.X, replaceExisting);
-	}
+	public function useZX(?replaceExisting:Bool = false):Void {}
 	
 	/**
 	 * Preset to use the Y and X keys for fire buttons.
 	 * @param replaceExisting pass true to replace exisiting keys, false to add mapping without replacing existing keys. 
 	 */
-	public function useYX(?replaceExisting:Bool = false):Void
-	{
-		mapFireButtons(Keyboard.Y, Keyboard.X, replaceExisting);
-	}
+	public function useYX(?replaceExisting:Bool = false):Void {}
 	
 	/**
 	 * Preset to use the CTRL and SPACEBAR keys for fire buttons.
 	 * @param replaceExisting pass true to replace exisiting keys, false to add mapping without replacing existing keys. 
 	 */
-	public function useControlSpace(?replaceExisting:Bool = false):Void
-	{
-		mapFireButtons(Keyboard.CONTROL, Keyboard.SPACE, replaceExisting);
-	}
+	public function useControlSpace(?replaceExisting:Bool = false):Void {}
 	
 	/// UPDATE:
 	
 	/**
-	 * Step/Update the gamepad. Called automatically if you didn't pass in autoStep as false. This should be called in sync with you game/physics step.
+	 * Step/Update the gamepad. This should be called in sync with you game/physics step.
 	 */
 	public function step():Void
 	{
@@ -340,39 +297,21 @@ class Gamepad
 		rotation = angle * 57.29577951308232;
 		
 		for (gamepadInput in inputs) gamepadInput.update();
+
+		if (view != null) view.update();
 	}
-	
-	
 	
 	public function updateState():Void
 	{
 		for(gamepadMultiInput in multiInputs) gamepadMultiInput.update();
 		
-		if (up.isDown)
-		{
-			targetY = -up.pression;
-		}
-		else if (down.isDown)
-		{
-			targetY = down.pression;
-		}
-		else
-		{
-			targetY = 0;
-		}
+		if (up.isDown) targetY = -up.pression;
+		else if (down.isDown) targetY = down.pression;
+		else targetY = 0;
 		
-		if (left.isDown)
-		{
-			targetX = -left.pression;
-		}
-		else if (right.isDown)
-		{
-			targetX = right.pression;
-		}
-		else
-		{
-			targetX = 0;
-		}
+		if (left.isDown) targetX = -left.pression;
+		else if (right.isDown) targetX = right.pression;
+		else targetX = 0;
 		
 		var targetAngle:Float = Math.atan2(targetX, targetY);
 		
@@ -383,23 +322,16 @@ class Gamepad
 		}
 	}
 	
-	
-	
-	private function onEnterFrame(event:Event):Void
+	function onKeyDown(keyCode:Int):Void
 	{
-		step();
-	}
-	
-	private function onKeyDown(event:KeyboardEvent):Void
-	{
-		for(gamepadInput in inputs) gamepadInput.keyDown(event.keyCode);
+		for(gamepadInput in inputs) gamepadInput.keyDown(keyCode);
 		
 		updateState();
 	}
 	
-	private function onKeyUp(event:KeyboardEvent):Void
+	function onKeyUp(keyCode):Void
 	{
-		for(gamepadInput in inputs) gamepadInput.keyUp(event.keyCode);
+		for(gamepadInput in inputs) gamepadInput.keyUp(keyCode);
 		
 		updateState();
 	}
