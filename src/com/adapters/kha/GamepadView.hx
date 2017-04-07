@@ -13,9 +13,9 @@ typedef Visual = {
     var colour:Color;
 }
 
-class GamepadView extends Sprite implements com.adapters.IGamepadView
+class GamepadView implements com.adapters.IGamepadView
 {
-    var background:Visual;
+    	var background:Visual;
 	var ball:Visual;
 	var button1:Visual;
 	var button2:Visual;
@@ -32,11 +32,11 @@ class GamepadView extends Sprite implements com.adapters.IGamepadView
 	public function new(_gamepad:Gamepad, _colour:UInt = 0x669900) 
 	{
 		super(null);
-        background = new h2d.Graphics(this);
+        	background = new h2d.Graphics(this);
 		
 		gamepad = _gamepad;
-        gamepad.view = this;
-        colour = Color.fromValue(_colour);
+		gamepad.view = this;
+		colour = Color.fromValue(_colour);
 		
 		drawBackground();
 		createBall();
@@ -52,21 +52,21 @@ class GamepadView extends Sprite implements com.adapters.IGamepadView
 	
 	private function drawSquare():Void
 	{
-        var c = new Color(colour.value);
-        c.a = .2;
-        background = {x:-50, y:-50, w:100, h:100, colour:c};
+		var c = new Color(colour.value);
+		c.a = .2;
+		background = {x:-50, y:-50, w:100, h:100, colour:c};
 	}
 	
 	private function drawCircle():Void
 	{
-        var c = new Color(colour.value);
-        c.a = .2;
-        background = {x:0, y:0, r:50, colour:c};
+		var c = new Color(colour.value);
+		c.a = .2;
+		background = {x:0, y:0, r:50, colour:c};
 	}
 	
 	private function createBall():Void
 	{
-        ball = {x:0, y:0, r:25, colour:new Color(colour.value)};
+        	ball = {x:0, y:0, r:25, colour:new Color(colour.value)};
 	}
 	
 	private function createKeypad():Void
@@ -100,12 +100,12 @@ class GamepadView extends Sprite implements com.adapters.IGamepadView
 	
 	private function createButton():Graphics
 	{
-        return {x:0, y:0, r:15, colour:new Color(colour.value)};
+        	return {x:0, y:0, r:15, colour:new Color(colour.value)};
 	}
 	
 	private function createKey():Graphics
 	{
-        return {x:0, y:0, w:30, h:30, colour:new Color(colour.value)};
+        	return {x:0, y:0, w:30, h:30, colour:new Color(colour.value)};
 	}
 	
 	public function update():Void
@@ -122,19 +122,19 @@ class GamepadView extends Sprite implements com.adapters.IGamepadView
 		right.color.a = gamepad.right.isDown ? 1 : 0.2;
 	}
 	
-    public function render(g:kha.graphics2.Graphics) {
-        drawVisual(g, background);
-        drawVisual(g, button1);
-        drawVisual(g, button2);
-        drawVisual(g, up);
-        drawVisual(g, down);
-        drawVisual(g, left);
-        drawVisual(g, right);
-    }
+	public function render(g:kha.graphics2.Graphics) {
+		drawVisual(g, background);
+		drawVisual(g, button1);
+		drawVisual(g, button2);
+		drawVisual(g, up);
+		drawVisual(g, down);
+		drawVisual(g, left);
+		drawVisual(g, right);
+	}
 
-    function drawVisual(g:kha.graphics2.Graphicx, v:Visual) {
-        g.color = v.color;
-        if (v.r == null) g.fillRect(v.x, v.y, v.w, v.h);
-        else g.drawCircle(v.x, v.y, v.r);
-    }
+	function drawVisual(g:kha.graphics2.Graphicx, v:Visual) {
+		g.color = v.color;
+		if (v.r == null) g.fillRect(v.x, v.y, v.w, v.h);
+		else g.drawCircle(v.x, v.y, v.r);
+	}
 }

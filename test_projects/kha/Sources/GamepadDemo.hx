@@ -6,7 +6,7 @@ import kha.System;
 
 class GamepadDemo {
 
-    var gp:com.iainlobb.gamepad.Gamepad;
+    	var gp:com.iainlobb.gamepad.Gamepad;
 	var gpview:com.adapters.kha.GamepadView;
 
 	public function new() {
@@ -14,9 +14,9 @@ class GamepadDemo {
 		Scheduler.addTimeTask(update, 0, 1 / 60);
 
 		var gp = com.adapters.kha.Gamepad(true);
-        gpv = new com.adapters.heaps.GamepadView(gp);
-        gpv.x = kha.System.windowWidth*.5;
-        gpv.y = kha.System.windowHeight*.5;
+		gpv = new com.adapters.kha.GamepadView(gp);
+		gpv.x = kha.System.windowWidth*.5;
+		gpv.y = kha.System.windowHeight*.5;
 	}
 
 	function update(): Void {}

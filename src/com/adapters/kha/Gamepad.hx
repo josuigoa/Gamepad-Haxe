@@ -17,7 +17,7 @@ class Gamepad extends com.iainlobb.gamepad.Gamepad {
     public function new(isCircle:Bool, ?ease:Float = 0.2) {
         super(isCircle, ease);
 
-	    Keyboard.get().notify(on_kha_keydown, on_kha_keyup);
+	Keyboard.get().notify(on_kha_keydown, on_kha_keyup);
         // useWASD(true);
         // useGH(true);
     }
@@ -47,7 +47,7 @@ class Gamepad extends com.iainlobb.gamepad.Gamepad {
     }
 
     override function destroy() {
-	    Keyboard.get().remove(on_kha_keydown, on_kha_keyup);
+	Keyboard.get().remove(on_kha_keydown, on_kha_keyup);
     }
 
     // DIRECTION
