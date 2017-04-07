@@ -7,7 +7,7 @@ import kha.System;
 class GamepadDemo {
 
     	var gp:com.iainlobb.gamepad.Gamepad;
-	var gpview:com.adapters.kha.GamepadView;
+	var gpv:com.adapters.kha.GamepadView;
 
 	public function new() {
 		System.notifyOnRender(render);
